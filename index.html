@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scientific Number Validator</title>
-  <link rel="stylesheet" href="static/styles.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <!-- Tombol "About" di sudut kanan atas -->
@@ -14,7 +14,6 @@
 
   <!-- Container utama yang ingin kita letakkan di tengah -->
   <div class="container">
-    <h1 style="color:rgb(97, 0, 0);">Scientific Number Validator</h1>
     <input type="text" id="number-input" placeholder="Enter a number">
     <button id="validate-button">Validate Number</button>
     <div id="result">
@@ -37,20 +36,23 @@
   <!-- JavaScript -->
   <script>
     // Tombol "Validate"
-    document.getElementById('validate-button').addEventListener('click', function() {
+    document.getElementById('validate-button').addEventListener('click', async function() {
       const number = document.getElementById('number-input').value;
-      fetch('/validate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `number=${encodeURIComponent(number)}`
-      })
-      .then(response => response.json())
-      .then(data => {
+      try {
+        const response = await fetch('/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `number=${encodeURIComponent(number)}`
+        });
+        const data = await response.json();
         document.getElementById('number').innerText = `Entered Number: ${data.number}`;
         document.getElementById('validity').innerText = `Is Valid: ${data.valid}`;
-      });
+      } catch (error) {
+        document.getElementById('validity').innerText = 'Error: Unable to validate the number.';
+        console.error('Error:', error);
+      }
     });
 
     // Tombol "About" untuk membuka modal
@@ -76,4 +78,3 @@
   </script>
 </body>
 </html>
-
