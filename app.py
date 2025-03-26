@@ -1,15 +1,12 @@
 import re
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, jsonify, render_template
 
-app = Flask(__name__)
+app =Flask(__name__)
 
 def is_scientific_number(value):
-    """
-    Mengecek apakah nilai berupa string merupakan scientific number.
-    Contoh valid: 1.23e+10, -4.56E-3, .789e5, dll.
-    """
-    pattern = r'^[+-]?(\d+(\.\d+)?|\.\d+)[eE][+-]?\d+$'
-    return re.match(pattern, value) is not None
+    
+   pattern = r'^[+-]?(\d+(\.\d+)?|\.\d+)[eE][+-]?\d+$'
+   return re.match(pattern, value) is not None
 
 @app.route('/')
 def index():
@@ -22,4 +19,5 @@ def validate():
     return jsonify({'number': number, 'valid': valid})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False, debug_log=True)
+    
